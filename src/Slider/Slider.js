@@ -57,9 +57,10 @@ class Slider extends PureComponent {
   slider = React.createRef()
 
   static snapValues(values0, valueToStep, doSnap) {
-    return doSnap && values0
-      ? values0.map(x => valueToStep.getValue(x))
-      : values0
+    return values0
+    // return doSnap && values0
+    //   ? values0.map(x => valueToStep.getValue(x))
+    //   : values0
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -451,8 +452,8 @@ class Slider extends PureComponent {
       }
 
       let afterburnerState
-      if (nextHandleAfterburner)
-        afterburnerState = nextHandleAfterburner(handles)
+      // if (nextHandleAfterburner)
+      //   afterburnerState = nextHandleAfterburner(handles)
 
       return {
         handles,
