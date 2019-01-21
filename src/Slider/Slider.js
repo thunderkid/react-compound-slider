@@ -392,15 +392,7 @@ class Slider extends PureComponent {
     const nextActualHandles = this.actualNextHandles(nextHandles)
 
     //this.tooltipState.hoveredHandleID = this.activeHandleID
-    this.sendTooltip(nextActualHandles) //todo: should pass nextActualHandles?
-
-    // todo: probably check this against nextActualValues?
-    // this.props.tooltipCallback({
-    //   hoveredHandleID: this.activeHandleID,
-    //   val: updateValue,
-    //   percent: valueToPerc.getValue(updateValue),
-    //   grabbed: true,
-    // })
+    this.sendTooltip(nextActualHandles)
 
     // submit the candidate values
     this.submitUpdate(nextActualHandles)
@@ -423,31 +415,6 @@ class Slider extends PureComponent {
 
     return pixelToStep.getValue(getPosition(vertical, e, false)) // mouse only
   }
-
-  // setHoverState(e) {
-  //   if (e) {
-  //     // find the closest value (aka step) to the event location
-  //     const {
-  //       state: { handles: curr, pixelToStep },
-  //       props: { vertical, reversed },
-  //     } = this
-  //     const { slider } = this
-
-  //     // double check the dimensions of the slider
-  //     // todo: necessary?
-  //     pixelToStep.setDomain(
-  //       getSliderDomain(slider.current, vertical, pixelToStep),
-  //     )
-
-  //     const updateValue = pixelToStep.getValue(getPosition(vertical, e, false)) // mouse only
-
-  //     this.setState({
-  //       hoverState: { val: updateValue },
-  //     })
-  //   } else {
-  //     this.setState({ hoverState: null })
-  //   }
-  // }
 
   // given candidate next values, computes the actual ones that will be allowed
   // based on the mode.
@@ -521,15 +488,6 @@ class Slider extends PureComponent {
         this.tooltipState.hoverVal = this.getHoverVal(e)
         this.sendTooltip()
       }
-      // const valueToPerc = this.state.valueToPerc
-      // const val = this.getHoverVal(e)
-      // this.props.tooltipCallback({
-      //   hoveredHandleID: id,
-      //   val: val,
-      //   percent: valueToPerc.getValue(val),
-      // })
-      //this.setState({ hoveredHandleID: id })
-      //this.setHoverState(e)
     }
   }
 
@@ -544,16 +502,6 @@ class Slider extends PureComponent {
         this.tooltipState.hoverVal = this.getHoverVal(e)
         this.sendTooltip()
       }
-      // const { valueToPerc, handles } = this.state
-      // console.log(`id, handles ${id}    ${JSON.stringify(handles)}`)
-
-      // const val = id ? handles.find(h => h.key == id).val : this.getHoverVal(e)  // todo: what if not found?
-
-      // this.props.tooltipCallback({
-      //   hoveredHandleID: id,
-      //   val: val,
-      //   percent: valueToPerc.getValue(val),
-      // })
     }
   }
 
@@ -582,9 +530,7 @@ class Slider extends PureComponent {
 
     this.activeHandleID = null
     this.sendTooltip()
-    //this.setState({ activeHandleID: null })
 
-    //this.props.tooltipCallback(null) // but what if it's still over stuff? should have recorded that in onmouseentergadget etc.
     isTouch ? this.removeTouchEvents() : this.removeMouseEvents()
   }
 
@@ -595,15 +541,6 @@ class Slider extends PureComponent {
     const { activeHandleID } = this
 
     const handles = freshHandles ? freshHandles : currHandles
-
-    const tti = Slider.getTooltipInfo(
-      hoverVal,
-      handles,
-      activeHandleID,
-      hoveredHandleID,
-      valueToPerc,
-    )
-    console.log(`tooltip info ${JSON.stringify(tti)}`)
 
     if (tooltipCallback) {
       tooltipCallback(
@@ -662,27 +599,13 @@ class Slider extends PureComponent {
 
   render() {
     const {
-      state: {
-        handles,
-        valueToPerc,
-        hoverState,
-        activeHandleID,
-        hoveredHandleID,
-      },
+      state: { handles, valueToPerc },
       props: { className, rootStyle, disabled },
     } = this
 
     const mappedHandles = handles.map(({ key, val }) => {
       return { id: key, value: val, percent: valueToPerc.getValue(val) }
     })
-
-    // const tooltipInfo = Slider.getTooltipInfo(
-    //   hoverState,
-    //   mappedHandles,
-    //   activeHandleID,
-    //   hoveredHandleID,
-    //   valueToPerc,
-    // )
 
     const children = React.Children.map(this.props.children, child => {
       if (
@@ -703,12 +626,6 @@ class Slider extends PureComponent {
         })
       else return child // eg tooltip
     })
-    //   else if (child.type.name === Tooltip.name)
-    //     return React.cloneElement(child, {
-    //       tooltipInfo: tooltipInfo,
-    //     })
-    //   else return child
-    // })
 
     return (
       <div style={rootStyle || {}} className={className} ref={this.slider}>
