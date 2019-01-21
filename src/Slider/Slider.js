@@ -581,8 +581,18 @@ class Slider extends PureComponent {
 
   sendTooltip() {
     const { tooltipCallback } = this.props
-    const { handles, activeHandleID, valueToPerc } = this.state
+    const { handles, valueToPerc } = this.state
     const { hoverVal, hoveredHandleID } = this.tooltipState
+    const { activeHandleID } = this
+
+    const tti = Slider.getTooltipInfo(
+      hoverVal,
+      handles,
+      activeHandleID,
+      hoveredHandleID,
+      valueToPerc,
+    )
+    console.log(`tooltip info ${JSON.stringify(tti)}`)
 
     if (tooltipCallback) {
       tooltipCallback(
@@ -597,17 +607,18 @@ class Slider extends PureComponent {
     }
   }
 
-  static tooltipForHandle(handles, id, grabbed) {
+  static tooltipForHandle(handles, valueToPerc, id, grabbed) {
     const handle = handles.find(h => h.key == id)
+    console.log(`tooltip for handle ${JSON.stringify(handle)}`)
     warning(
       handle,
       `matching handle not found for id ${id} in ${JSON.stringify(handles)}`,
     )
 
     return {
-      val: handle.value,
-      percent: handle.percent,
-      handleId: handle.id,
+      val: handle.val,
+      percent: valueToPerc.getValue(handle.val),
+      handleId: id,
       grabbed: grabbed,
     }
   }
@@ -621,9 +632,14 @@ class Slider extends PureComponent {
     valueToPerc,
   ) {
     if (activeHandleID)
-      return Slider.tooltipForHandle(handles, activeHandleID, true)
+      return Slider.tooltipForHandle(handles, valueToPerc, activeHandleID, true)
     else if (hoveredHandleID)
-      return Slider.tooltipForHandle(handles, hoveredHandleID, false)
+      return Slider.tooltipForHandle(
+        handles,
+        valueToPerc,
+        hoveredHandleID,
+        false,
+      )
     else if (hoverVal != null)
       // hovering over rail or track
       return {
