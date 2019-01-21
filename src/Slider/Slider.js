@@ -398,7 +398,7 @@ class Slider extends PureComponent {
     this.submitUpdate(this.actualNextHandles(nextHandles))
   }
 
-  setHoverState(e) {
+  getHoverVal(e) {
     if (e) {
       // find the closest value (aka step) to the event location
       const {
@@ -408,19 +408,39 @@ class Slider extends PureComponent {
       const { slider } = this
 
       // double check the dimensions of the slider
+      // todo: really necessary or needless expense here?
       pixelToStep.setDomain(
         getSliderDomain(slider.current, vertical, pixelToStep),
       )
 
-      const updateValue = pixelToStep.getValue(getPosition(vertical, e, false)) // mouse only
-
-      this.setState({
-        hoverState: { val: updateValue },
-      })
-    } else {
-      this.setState({ hoverState: null })
-    }
+      return pixelToStep.getValue(getPosition(vertical, e, false)) // mouse only
+    } else return null
   }
+
+  // setHoverState(e) {
+  //   if (e) {
+  //     // find the closest value (aka step) to the event location
+  //     const {
+  //       state: { handles: curr, pixelToStep },
+  //       props: { vertical, reversed },
+  //     } = this
+  //     const { slider } = this
+
+  //     // double check the dimensions of the slider
+  //     // todo: necessary?
+  //     pixelToStep.setDomain(
+  //       getSliderDomain(slider.current, vertical, pixelToStep),
+  //     )
+
+  //     const updateValue = pixelToStep.getValue(getPosition(vertical, e, false)) // mouse only
+
+  //     this.setState({
+  //       hoverState: { val: updateValue },
+  //     })
+  //   } else {
+  //     this.setState({ hoverState: null })
+  //   }
+  // }
 
   // given candidate next values, computes the actual ones that will be allowed
   // based on the mode.
@@ -485,21 +505,37 @@ class Slider extends PureComponent {
   // Corresponds to mouse entering a part of the Rail/Track/Handle "Gadget". Id corresponds to the handla handle.
   onMouseEnterGadget = (e, id) => {
     if (this.usingTooltip()) {
-      this.setState({ hoveredHandleID: id })
-      this.setHoverState(e)
+      const valueToPerc = this.state.valueToPerc
+      const val = this.getHoverVal(e)
+      this.props.tooltipCallback({
+        hoveredHandleID: id,
+        val: val,
+        percent: valueToPerc.getValue(val),
+      })
+      //this.setState({ hoveredHandleID: id })
+      //this.setHoverState(e)
     }
   }
 
   onMouseMoveGadget = (e, id) => {
     if (this.usingTooltip()) {
-      this.setHoverState(e)
+      const valueToPerc = this.state.valueToPerc
+      const val = this.getHoverVal(e)
+      this.props.tooltipCallback({
+        hoveredHandleID: id,
+        val: val,
+        percent: valueToPerc.getValue(val),
+      })
+
+      //this.setHoverState(e)
     }
   }
 
   onMouseLeaveGadget = () => {
     if (this.usingTooltip()) {
-      this.setState({ hoveredHandleID: null })
-      this.setHoverState(null)
+      this.props.tooltipCallback(null)
+      // this.setState({ hoveredHandleID: null })
+      // this.setHoverState(null)
     }
   }
 
@@ -525,43 +561,43 @@ class Slider extends PureComponent {
     isTouch ? this.removeTouchEvents() : this.removeMouseEvents()
   }
 
-  static tooltipForHandle(mappedHandles, id, grabbed) {
-    const handle = mappedHandles.find(h => h.id == id)
-    warning(
-      handle,
-      `matching handle not found for id ${id} in ${JSON.stringify(
-        mappedHandles,
-      )}`,
-    )
+  // static tooltipForHandle(mappedHandles, id, grabbed) {
+  //   const handle = mappedHandles.find(h => h.id == id)
+  //   warning(
+  //     handle,
+  //     `matching handle not found for id ${id} in ${JSON.stringify(
+  //       mappedHandles,
+  //     )}`,
+  //   )
 
-    return {
-      val: handle.value,
-      percent: handle.percent,
-      handleId: handle.id,
-      grabbed: grabbed,
-    }
-  }
+  //   return {
+  //     val: handle.value,
+  //     percent: handle.percent,
+  //     handleId: handle.id,
+  //     grabbed: grabbed,
+  //   }
+  // }
 
-  // choose tooltip to display based on hover location, active handle, hovered handle.
-  static getTooltipInfo(
-    hoverState,
-    mappedHandles,
-    activeHandleID,
-    hoveredHandleID,
-    valueToPerc,
-  ) {
-    if (activeHandleID)
-      return Slider.tooltipForHandle(mappedHandles, activeHandleID, true)
-    else if (hoveredHandleID)
-      return Slider.tooltipForHandle(mappedHandles, hoveredHandleID, false)
-    else if (hoverState != null && hoverState.val != null)
-      // hovering over rail or track
-      return {
-        val: hoverState.val,
-        percent: valueToPerc.getValue(hoverState.val),
-      }
-    else return null
-  }
+  // // choose tooltip to display based on hover location, active handle, hovered handle.
+  // static getTooltipInfo(
+  //   hoverState,
+  //   mappedHandles,
+  //   activeHandleID,
+  //   hoveredHandleID,
+  //   valueToPerc,
+  // ) {
+  //   if (activeHandleID)
+  //     return Slider.tooltipForHandle(mappedHandles, activeHandleID, true)
+  //   else if (hoveredHandleID)
+  //     return Slider.tooltipForHandle(mappedHandles, hoveredHandleID, false)
+  //   else if (hoverState != null && hoverState.val != null)
+  //     // hovering over rail or track
+  //     return {
+  //       val: hoverState.val,
+  //       percent: valueToPerc.getValue(hoverState.val),
+  //     }
+  //   else return null
+  // }
 
   render() {
     const {
@@ -579,13 +615,13 @@ class Slider extends PureComponent {
       return { id: key, value: val, percent: valueToPerc.getValue(val) }
     })
 
-    const tooltipInfo = Slider.getTooltipInfo(
-      hoverState,
-      mappedHandles,
-      activeHandleID,
-      hoveredHandleID,
-      valueToPerc,
-    )
+    // const tooltipInfo = Slider.getTooltipInfo(
+    //   hoverState,
+    //   mappedHandles,
+    //   activeHandleID,
+    //   hoveredHandleID,
+    //   valueToPerc,
+    // )
 
     const children = React.Children.map(this.props.children, child => {
       if (
@@ -596,7 +632,7 @@ class Slider extends PureComponent {
       )
         return React.cloneElement(child, {
           scale: valueToPerc,
-          handles: mappedHandles, // isn't it superfluous to send eg this to eg Tracks?
+          handles: mappedHandles, // isn't it superfluous to send eg this to eg Rail or Ticks?
           emitKeyboard: disabled ? noop : this.onKeyDown,
           emitMouse: disabled ? noop : this.onMouseDown,
           emitTouch: disabled ? noop : this.onTouchStart,
@@ -604,12 +640,13 @@ class Slider extends PureComponent {
           emitMouseMove: disabled ? noop : this.onMouseMoveGadget,
           emitMouseLeave: disabled ? noop : this.onMouseLeaveGadget,
         })
-      else if (child.type.name === Tooltip.name)
-        return React.cloneElement(child, {
-          tooltipInfo: tooltipInfo,
-        })
-      else return child
     })
+    //   else if (child.type.name === Tooltip.name)
+    //     return React.cloneElement(child, {
+    //       tooltipInfo: tooltipInfo,
+    //     })
+    //   else return child
+    // })
 
     return (
       <div style={rootStyle || {}} className={className} ref={this.slider}>
@@ -659,6 +696,9 @@ Slider.propTypes = {
    * Reverse the display of slider values.
    */
   reversed: PropTypes.bool,
+
+  tooltipCallback: PropTypes.func,
+
   /**
    * Function triggered when the value of the slider has changed. This will recieve changes at the end of a slide as well as changes from clicks on rails and tracks. Receives values.
    */
@@ -691,6 +731,7 @@ Slider.defaultProps = {
   domain: [0, 100],
   vertical: false,
   reversed: false,
+  tooltipCallback: noop,
   onChange: noop,
   onUpdate: noop,
   onSlideStart: noop,

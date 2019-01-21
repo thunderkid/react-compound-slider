@@ -42,6 +42,10 @@ const tooltipStyle = (percent, handleId, grabbed) => {
 const domain = [50, 300]
 const defaultValues = [280]
 
+function tooltipCallback(ti) {
+  console.log(`tooltip ${JSON.stringify(ti)}`)
+}
+
 class Example extends Component {
   state = {
     values: defaultValues.slice(),
@@ -81,6 +85,7 @@ class Example extends Component {
           onUpdate={this.onUpdate}
           onChange={this.onChange}
           values={values}
+          tooltipCallback={tooltipCallback}
         >
           <Rail>
             {({ getRailProps }) => (
