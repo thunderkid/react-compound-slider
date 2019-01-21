@@ -49,10 +49,10 @@ const defaultValues = [280]
 class TT2 extends Component {
   render() {
     const {
-      props: { tt2pct },
+      props: { percent },
     } = this
 
-    return <div>sez {tt2pct}</div>
+    return <div>sez {percent}</div>
   }
 }
 
@@ -75,15 +75,18 @@ class Example extends Component {
     this.setState({ disabled: !this.state.disabled })
   }
 
-  tooltipCallback = (id, val, pct) => {
-    console.log(`tooltip ${id}, ${val}, ${pct}`)
-    this.setState({ tt2pct: pct })
+  tooltipCallback = tti => {
+    console.log(`tooltip ${JSON.stringify(tti)}`)
+    this.setState({ tt2pct: tti ? tti.percent : null })
   }
 
   render() {
     const {
+      state,
       state: { tt2pct, values, update, disabled },
     } = this
+
+    console.log(`state ${JSON.stringify(state)}`)
 
     return (
       <div style={{ height: 120, width: '100%' }}>
