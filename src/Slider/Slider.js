@@ -398,7 +398,7 @@ class Slider extends PureComponent {
     const nextActualHandles = this.actualNextHandles(nextHandles)
 
     //this.tooltipState.hoveredHandleID = this.activeHandleID
-    this.sendTooltip() //todo: should pass nextActualHandles?
+    this.sendTooltip(nextActualHandles) //todo: should pass nextActualHandles?
 
     // todo: probably check this against nextActualValues?
     // this.props.tooltipCallback({
@@ -580,11 +580,13 @@ class Slider extends PureComponent {
     isTouch ? this.removeTouchEvents() : this.removeMouseEvents()
   }
 
-  sendTooltip() {
+  sendTooltip(freshHandles) {
     const { tooltipCallback } = this.props
-    const { handles, valueToPerc } = this.state
+    const { handles: currHandles, valueToPerc } = this.state
     const { hoverVal, hoveredHandleID } = this.tooltipState
     const { activeHandleID } = this
+
+    const handles = freshHandles ? freshHandles : currHandles
 
     const tti = Slider.getTooltipInfo(
       hoverVal,
