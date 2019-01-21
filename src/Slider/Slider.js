@@ -521,8 +521,16 @@ class Slider extends PureComponent {
   // Corresponds to mouse entering a part of the Rail/Track/Handle "Gadget". Id corresponds to the handla handle.
   onMouseEnterGadget = (e, id) => {
     if (this.usingTooltip()) {
-      this.tooltipState.hoveredHandleID = id
-      this.sendTooltip()
+      if (!id) {
+        this.tooltipState.hoveredHandleID = null
+        this.tooltipState.hoverVal = this.getHoverVal(e)
+        this.sendTooltip()
+      } else if (!this.activeHandleID /*|| this.activeHandleID == id*/) {
+        // ghosting crossover issues
+        this.tooltipState.hoveredHandleID = id
+        this.tooltipState.hoverVal = this.getHoverVal(e)
+        this.sendTooltip()
+      }
       // const valueToPerc = this.state.valueToPerc
       // const val = this.getHoverVal(e)
       // this.props.tooltipCallback({
@@ -537,9 +545,15 @@ class Slider extends PureComponent {
 
   onMouseMoveGadget = (e, id) => {
     if (this.usingTooltip()) {
-      this.tooltipState.hoveredHandleID = id
-      this.tooltipState.hoverVal = this.getHoverVal(e)
-      this.sendTooltip()
+      if (!id /*|| this.activeHandleID == id*/) {
+        this.tooltipState.hoveredHandleID = null
+        this.tooltipState.hoverVal = this.getHoverVal(e)
+        this.sendTooltip()
+      } else if (!this.activeHandleID /*|| this.activeHandleID == id*/) {
+        this.tooltipState.hoveredHandleID = id
+        this.tooltipState.hoverVal = this.getHoverVal(e)
+        this.sendTooltip()
+      }
       // const { valueToPerc, handles } = this.state
       // console.log(`id, handles ${id}    ${JSON.stringify(handles)}`)
 
