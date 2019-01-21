@@ -53,7 +53,9 @@ class TT2 extends Component {
     return (
       <>
         {tti && (
-          <div style={tooltipStyle(tti.percent, tti.hoveredHandleId, false)}>
+          <div
+            style={tooltipStyle(tti.percent, tti.hoveredHandleId, tti.grabbed)}
+          >
             {tti.val}
           </div>
         )}

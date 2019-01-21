@@ -373,8 +373,8 @@ class Slider extends PureComponent {
   // mouse or touch being moved
   onMove(e, isTouch) {
     const {
-      state: { handles: curr, pixelToStep, activeHandleID },
-      props: { vertical, reversed },
+      state: { handles: curr, pixelToStep, activeHandleID, valueToPerc },
+      props: { vertical, reversed, tooltipCallback },
     } = this
     const { slider } = this
 
@@ -393,9 +393,18 @@ class Slider extends PureComponent {
       updateValue,
       reversed,
     )
+    const nextActualHandles = this.actualNextHandles(nextHandles)
+
+    // todo: probably check this against nextActualValues?
+    this.props.tooltipCallback({
+      hoveredHandleID: activeHandleID,
+      val: updateValue,
+      percent: valueToPerc.getValue(updateValue),
+      grabbed: true,
+    })
 
     // submit the candidate values
-    this.submitUpdate(this.actualNextHandles(nextHandles))
+    this.submitUpdate(nextActualHandles)
   }
 
   getHoverVal(e) {
