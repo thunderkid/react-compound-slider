@@ -108,20 +108,6 @@ class Example extends Component {
           <Slider.Rail>
             {({ getRailProps }) => <Rail getRailProps={getRailProps} />}
           </Slider.Rail>
-          <Slider.Tooltip>
-            {({ tooltipInfo, getTooltipProps }) => (
-              <div
-                style={tooltipStyle(
-                  tooltipInfo.percent,
-                  tooltipInfo.handleId,
-                  tooltipInfo.grabbed,
-                )}
-                {...getTooltipProps()}
-              >
-                {tooltipInfo.val}
-              </div>
-            )}
-          </Slider.Tooltip>
 
           <Slider.Handles>
             {({ handles, getHandleProps }) => (

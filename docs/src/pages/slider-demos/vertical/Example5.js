@@ -1,13 +1,7 @@
 // @flow weak
 
 import React, { Component } from 'react'
-import Slider, {
-  Rail,
-  Handles,
-  Tracks,
-  Ticks,
-  Tooltip,
-} from 'react-compound-slider'
+import Slider, { Rail, Handles, Tracks, Ticks } from 'react-compound-slider'
 import ValueViewer from 'docs/src/pages/ValueViewer' // for examples only - displays the table above slider
 import { Handle, Track, Tick } from './components' // example render components - source below
 
@@ -47,6 +41,24 @@ const tooltipStyle = percent => {
 const domain = [100, 300]
 const defaultValues = [250, 200, 150, 100]
 
+class TT2 extends Component {
+  render() {
+    const tti = this.props.tti
+    console.log(`tti got ${JSON.stringify(tti)}`)
+    return (
+      <>
+        {tti && (
+          <div
+            style={tooltipStyle(tti.percent, tti.hoveredHandleId, tti.grabbed)}
+          >
+            {tti.val}
+          </div>
+        )}
+      </>
+    )
+  }
+}
+
 class Example extends Component {
   state = {
     values: defaultValues.slice(),
@@ -61,9 +73,14 @@ class Example extends Component {
     this.setState({ values })
   }
 
+  tooltipCallback = tti => {
+    console.log(`tooltip ${JSON.stringify(tti)}`)
+    this.setState({ tti: tti })
+  }
+
   render() {
     const {
-      state: { values, update },
+      state: { tti, values, update },
     } = this
 
     return (
@@ -79,22 +96,14 @@ class Example extends Component {
           onUpdate={this.onUpdate}
           onChange={this.onChange}
           values={values}
+          tooltipCallback={this.tooltipCallback}
         >
+          <TT2 tti={tti} />
           <Rail>
             {({ getRailProps }) => (
               <div style={railStyle} {...getRailProps()} />
             )}
           </Rail>
-          <Tooltip>
-            {({ tooltipInfo, getTooltipProps }) => (
-              <div
-                style={tooltipStyle(tooltipInfo.percent)}
-                {...getTooltipProps()}
-              >
-                {tooltipInfo.val}
-              </div>
-            )}
-          </Tooltip>
           <Handles>
             {({ handles, getHandleProps }) => (
               <div className="slider-handles">

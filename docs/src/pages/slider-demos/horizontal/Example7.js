@@ -1,7 +1,7 @@
 // @flow weak
 
 import React, { Component } from 'react'
-import { Slider, Rail, Handles, Tracks, Tooltip } from 'react-compound-slider'
+import { Slider, Rail, Handles, Tracks } from 'react-compound-slider'
 import ValueViewer from 'docs/src/pages/ValueViewer' // for examples only - displays the table above slider
 import { Handle, Track } from './components' // example render components - source below
 
@@ -119,20 +119,6 @@ class Example extends Component {
               <div style={railStyle} {...getRailProps()} />
             )}
           </Rail>
-          <Tooltip>
-            {({ tooltipInfo, getTooltipProps }) => (
-              <div
-                style={tooltipStyle(
-                  tooltipInfo.percent,
-                  tooltipInfo.handleId,
-                  tooltipInfo.grabbed,
-                )}
-                {...getTooltipProps()}
-              >
-                {tooltipInfo.val}
-              </div>
-            )}
-          </Tooltip>
           <Handles>
             {({ handles, getHandleProps }) => (
               <div className="slider-handles">
