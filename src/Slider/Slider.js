@@ -408,22 +408,20 @@ class Slider extends PureComponent {
   }
 
   getHoverVal(e) {
-    if (e) {
-      // find the closest value (aka step) to the event location
-      const {
-        state: { handles: curr, pixelToStep },
-        props: { vertical, reversed },
-      } = this
-      const { slider } = this
+    // find the closest value (aka step) to the event location
+    const {
+      state: { handles: curr, pixelToStep },
+      props: { vertical, reversed },
+    } = this
+    const { slider } = this
 
-      // double check the dimensions of the slider
-      // todo: really necessary or needless expense here?
-      pixelToStep.setDomain(
-        getSliderDomain(slider.current, vertical, pixelToStep),
-      )
+    // double check the dimensions of the slider
+    // todo: really necessary or needless expense here?
+    pixelToStep.setDomain(
+      getSliderDomain(slider.current, vertical, pixelToStep),
+    )
 
-      return pixelToStep.getValue(getPosition(vertical, e, false)) // mouse only
-    } else return null
+    return pixelToStep.getValue(getPosition(vertical, e, false)) // mouse only
   }
 
   // setHoverState(e) {
@@ -511,6 +509,12 @@ class Slider extends PureComponent {
     return isUsing
   }
 
+  static handleFromId(handles, id) {
+    return handles.find(value => {
+      return value.key === handleID
+    })
+  }
+
   // Corresponds to mouse entering a part of the Rail/Track/Handle "Gadget". Id corresponds to the handla handle.
   onMouseEnterGadget = (e, id) => {
     if (this.usingTooltip()) {
@@ -528,8 +532,13 @@ class Slider extends PureComponent {
 
   onMouseMoveGadget = (e, id) => {
     if (this.usingTooltip()) {
-      const valueToPerc = this.state.valueToPerc
-      const val = this.getHoverVal(e)
+      const { valueToPerc, handles } = this.state
+      console.log(`id, handles ${id}    ${JSON.stringify(handles)}`)
+
+      const val = id ? handles.find(h => h.key == id).val : this.getHoverVal(e)
+
+      //val = id ? this.handleFromId(handles, id).val : this.getHoverVal(e)   // todo: test in case handlefromid null
+
       this.props.tooltipCallback({
         hoveredHandleID: id,
         val: val,
@@ -567,6 +576,7 @@ class Slider extends PureComponent {
 
     this.setState({ activeHandleID: null })
 
+    this.props.tooltipCallback(null) // but what if it's still over stuff? should have recorded that in onmouseentergadget etc.
     isTouch ? this.removeTouchEvents() : this.removeMouseEvents()
   }
 
