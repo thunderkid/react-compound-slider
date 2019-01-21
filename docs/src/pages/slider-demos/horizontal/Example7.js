@@ -94,8 +94,6 @@ class Example extends Component {
           {disabled ? 'ENABLE' : 'DISABLE'}
         </button>
 
-        <TT2 percent={tt2pct} />
-
         <ValueViewer values={values} update={update} />
         <Slider
           disabled={disabled}
@@ -107,6 +105,7 @@ class Example extends Component {
           values={values}
           tooltipCallback={this.tooltipCallback}
         >
+          <TT2 percent={tt2pct} />
           <Rail>
             {({ getRailProps }) => (
               <div style={railStyle} {...getRailProps()} />
