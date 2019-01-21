@@ -42,8 +42,18 @@ const tooltipStyle = (percent, handleId, grabbed) => {
 const domain = [50, 300]
 const defaultValues = [280]
 
-function tooltipCallback(ti) {
-  console.log(`tooltip ${JSON.stringify(ti)}`)
+// function tooltipCallback(ti) {
+//   console.log(`tooltip ${JSON.stringify(ti)}`)
+// }
+
+class TT2 extends Component {
+  render() {
+    const {
+      props: { tt2pct },
+    } = this
+
+    return <div>sez {tt2pct}</div>
+  }
 }
 
 class Example extends Component {
@@ -65,9 +75,14 @@ class Example extends Component {
     this.setState({ disabled: !this.state.disabled })
   }
 
+  tooltipCallback = (id, val, pct) => {
+    console.log(`tooltip ${id}, ${val}, ${pct}`)
+    this.setState({ tt2pct: pct })
+  }
+
   render() {
     const {
-      state: { values, update, disabled },
+      state: { tt2pct, values, update, disabled },
     } = this
 
     return (
@@ -75,6 +90,8 @@ class Example extends Component {
         <button onClick={() => this.toggleDisabled()}>
           {disabled ? 'ENABLE' : 'DISABLE'}
         </button>
+
+        <TT2 percent={tt2pct} />
 
         <ValueViewer values={values} update={update} />
         <Slider
@@ -85,7 +102,7 @@ class Example extends Component {
           onUpdate={this.onUpdate}
           onChange={this.onChange}
           values={values}
-          tooltipCallback={tooltipCallback}
+          tooltipCallback={this.tooltipCallback}
         >
           <Rail>
             {({ getRailProps }) => (
