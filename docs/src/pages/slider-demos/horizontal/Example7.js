@@ -48,11 +48,17 @@ const defaultValues = [280]
 
 class TT2 extends Component {
   render() {
-    const {
-      props: { percent },
-    } = this
-
-    return <div style={tooltipStyle(percent, null, false)}>{percent}</div>
+    const tti = this.props.tti
+    console.log(`tti got ${JSON.stringify(tti)}`)
+    return (
+      <>
+        {tti && (
+          <div style={tooltipStyle(tti.percent, tti.hoveredHandleId, false)}>
+            {tti.val}
+          </div>
+        )}
+      </>
+    )
   }
 }
 
@@ -77,13 +83,13 @@ class Example extends Component {
 
   tooltipCallback = tti => {
     console.log(`tooltip ${JSON.stringify(tti)}`)
-    this.setState({ tt2pct: tti ? tti.percent : null })
+    this.setState({ tti: tti })
   }
 
   render() {
     const {
       state,
-      state: { tt2pct, values, update, disabled },
+      state: { tti, values, update, disabled },
     } = this
 
     console.log(`state ${JSON.stringify(state)}`)
@@ -105,7 +111,7 @@ class Example extends Component {
           values={values}
           tooltipCallback={this.tooltipCallback}
         >
-          <TT2 percent={tt2pct} />
+          <TT2 tti={tti} />
           <Rail>
             {({ getRailProps }) => (
               <div style={railStyle} {...getRailProps()} />
