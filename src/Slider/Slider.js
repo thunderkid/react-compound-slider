@@ -17,7 +17,6 @@ import {
 } from './utils'
 import LinearScale from './LinearScale'
 import DiscreteScale from './DiscreteScale'
-import Tooltip from '../Tooltip'
 
 const isBrowser =
   typeof window !== 'undefined' && typeof document !== 'undefined'
@@ -237,10 +236,8 @@ class Slider extends PureComponent {
     e.stopPropagation && e.stopPropagation()
     e.preventDefault && e.preventDefault()
 
-    const found = handles.find(value => {
-      // todo: tidy these
-      return value.key === handleID
-    })
+    const found = handles.find(h => h.key == id)
+
     if (!found) {
       return
     }
@@ -280,9 +277,7 @@ class Slider extends PureComponent {
     e.stopPropagation && e.stopPropagation()
     e.preventDefault && e.preventDefault()
 
-    const found = handles.find(value => {
-      return value.key === handleID
-    })
+    const found = handles.find(h => h.key == id)
 
     if (found) {
       this.startSlide(found, isTouch)
@@ -290,7 +285,6 @@ class Slider extends PureComponent {
     } else {
       this.handleRailAndTrackClicks(e, isTouch)
     }
-    //this.sendTooltip()
   }
 
   startSlide(handle, isTouch) {
@@ -302,8 +296,6 @@ class Slider extends PureComponent {
     onSlideStart(handles.map(d => d.val), { activeHandleID: handle.key })
     isTouch ? this.addTouchEvents() : this.addMouseEvents()
     this.activeHandleID = handle.key
-    //this.sendTooltip()
-    //this.setState({ activeHandleID: handle.key })
   }
 
   handleRailAndTrackClicks(e, isTouch) {
@@ -350,9 +342,7 @@ class Slider extends PureComponent {
 
   grabHandleIfReaches(handles, id, value, isTouch) {
     // ie can handle reach this position given the mode
-    const found = handles.find(h => {
-      return h.key === id
-    })
+    const handle = handles.find(h => h.key == id)
 
     warning(
       found,
