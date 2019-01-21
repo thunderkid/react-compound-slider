@@ -551,6 +551,7 @@ class Slider extends PureComponent {
 
   onMouseLeaveGadget = () => {
     this.tooltipState.hoveredHandleID = null
+    this.tooltipState.hoverVal = null
     this.sendTooltip()
   }
 
