@@ -286,9 +286,11 @@ class Slider extends PureComponent {
 
     if (found) {
       this.startSlide(found, isTouch)
+      this.sendTooltip()
     } else {
       this.handleRailAndTrackClicks(e, isTouch)
     }
+    //this.sendTooltip()
   }
 
   startSlide(handle, isTouch) {
@@ -300,6 +302,7 @@ class Slider extends PureComponent {
     onSlideStart(handles.map(d => d.val), { activeHandleID: handle.key })
     isTouch ? this.addTouchEvents() : this.addMouseEvents()
     this.activeHandleID = handle.key
+    //this.sendTooltip()
     //this.setState({ activeHandleID: handle.key })
   }
 
@@ -358,6 +361,7 @@ class Slider extends PureComponent {
 
     if (found.val == value) {
       this.startSlide(found, isTouch)
+      this.sendTooltip(handles)
       // todo: do we need stop propagation?
     }
   }
