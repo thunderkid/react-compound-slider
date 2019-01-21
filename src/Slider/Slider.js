@@ -236,7 +236,7 @@ class Slider extends PureComponent {
     e.stopPropagation && e.stopPropagation()
     e.preventDefault && e.preventDefault()
 
-    const found = handles.find(h => h.key == id)
+    const found = handles.find(h => h.key == handleID)
 
     if (!found) {
       return
@@ -277,7 +277,7 @@ class Slider extends PureComponent {
     e.stopPropagation && e.stopPropagation()
     e.preventDefault && e.preventDefault()
 
-    const found = handles.find(h => h.key == id)
+    const found = handles.find(h => h.key == handleID)
 
     if (found) {
       this.startSlide(found, isTouch)
@@ -342,7 +342,7 @@ class Slider extends PureComponent {
 
   grabHandleIfReaches(handles, id, value, isTouch) {
     // ie can handle reach this position given the mode
-    const handle = handles.find(h => h.key == id)
+    const found = handles.find(h => h.key == id)
 
     warning(
       found,
