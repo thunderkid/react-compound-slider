@@ -161,6 +161,15 @@ A couple of tweaks to the build system were needed for windows - won't work off 
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// General issues - before my time
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+In pushable mode, pushing slowly works fine. But if you move very quickly it stops - presumably getting a 
+    mouseover event from the pushee.
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // pr
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 This PR implements three features as discussed:
@@ -210,3 +219,30 @@ To implement these, I did a fair bit of refactoring:
 Other than that I've tried to maintain the current style. All unit tests are passing, though I didn't add any more. Performance seems fine, though I didn't benchmark it carefully. Touch events have only been tested in the Chrome simulator, but they seem ok there.
 
 Cheers.
+
+
+
+What sort of function do you mean? At a minimum you need to respond to `Track` hover events and there's currently no way to do that. So are you talking about a function with this typescript signature?
+
+```
+interface TooltipInfo {
+    val: number;
+    percent: number;
+    handleId: string | null;
+    grabbed: boolean;
+}
+
+tooltipProcessor(desc: TooltipInfo | null) {
+
+}
+
+render() {
+    <Slider 
+        tooltipCallback={tooltipProcessor}
+        ...
+}
+```
+Where `tooltipCallback` is triggered whenever you hover over a rail, drag a handle, etc. I can't see how to achieve all the desired functionality with less. (Unless you want to treat the handles separately by rendering them with a `<div onMouseEnter.../>` but it seems messy to have different tooltips handled by different logic.)
+
+I think this could be achieved easily just by passing my `tooltipInfo` back up to the callback instead of down to the `<Tooltip>` and reducing `state` accordingly. In some ways it's a nicer separation of concerns.
+
