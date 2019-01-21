@@ -640,7 +640,7 @@ class Slider extends PureComponent {
           emitMouseMove: disabled ? noop : this.onMouseMoveGadget,
           emitMouseLeave: disabled ? noop : this.onMouseLeaveGadget,
         })
-      else return child
+      else return child // eg tooltip
     })
     //   else if (child.type.name === Tooltip.name)
     //     return React.cloneElement(child, {

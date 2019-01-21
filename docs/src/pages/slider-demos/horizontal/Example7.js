@@ -52,7 +52,7 @@ class TT2 extends Component {
       props: { percent },
     } = this
 
-    return <div>sez {percent}</div>
+    return <div style={tooltipStyle(percent, null, false)}>{percent}</div>
   }
 }
 
