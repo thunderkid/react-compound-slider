@@ -238,6 +238,7 @@ class Slider extends PureComponent {
     e.preventDefault && e.preventDefault()
 
     const found = handles.find(value => {
+      // todo: tidy these
       return value.key === handleID
     })
     if (!found) {
@@ -298,7 +299,8 @@ class Slider extends PureComponent {
 
     onSlideStart(handles.map(d => d.val), { activeHandleID: handle.key })
     isTouch ? this.addTouchEvents() : this.addMouseEvents()
-    this.setState({ activeHandleID: handle.key })
+    this.activeHandleID = handle.key
+    //this.setState({ activeHandleID: handle.key })
   }
 
   handleRailAndTrackClicks(e, isTouch) {
@@ -373,7 +375,7 @@ class Slider extends PureComponent {
   // mouse or touch being moved
   onMove(e, isTouch) {
     const {
-      state: { handles: curr, pixelToStep, activeHandleID, valueToPerc },
+      state: { handles: curr, pixelToStep, valueToPerc },
       props: { vertical, reversed, tooltipCallback },
     } = this
     const { slider } = this
@@ -389,25 +391,29 @@ class Slider extends PureComponent {
     // generate a "candidate" set of values - a suggestion of what to do
     const nextHandles = getUpdatedHandles(
       curr,
-      activeHandleID,
+      this.activeHandleID,
       updateValue,
       reversed,
     )
     const nextActualHandles = this.actualNextHandles(nextHandles)
 
+    //this.tooltipState.hoveredHandleID = this.activeHandleID
+    this.sendTooltip() //todo: should pass nextActualHandles?
+
     // todo: probably check this against nextActualValues?
-    this.props.tooltipCallback({
-      hoveredHandleID: activeHandleID,
-      val: updateValue,
-      percent: valueToPerc.getValue(updateValue),
-      grabbed: true,
-    })
+    // this.props.tooltipCallback({
+    //   hoveredHandleID: this.activeHandleID,
+    //   val: updateValue,
+    //   percent: valueToPerc.getValue(updateValue),
+    //   grabbed: true,
+    // })
 
     // submit the candidate values
     this.submitUpdate(nextActualHandles)
   }
 
   getHoverVal(e) {
+    // todo: rename
     // find the closest value (aka step) to the event location
     const {
       state: { handles: curr, pixelToStep },
@@ -501,30 +507,25 @@ class Slider extends PureComponent {
     })
   }
 
-  usingTooltip() {
-    let isUsing = false
-    React.Children.forEach(this.props.children, child => {
-      if (child.type.name === Tooltip.name) isUsing = true
-    })
-    return isUsing
-  }
+  tooltipState = {}
 
-  static handleFromId(handles, id) {
-    return handles.find(value => {
-      return value.key === handleID
-    })
+  // maybe not even bother - there's no rerendering issue now
+  usingTooltip() {
+    return this.props.tooltipCallback != null
   }
 
   // Corresponds to mouse entering a part of the Rail/Track/Handle "Gadget". Id corresponds to the handla handle.
   onMouseEnterGadget = (e, id) => {
     if (this.usingTooltip()) {
-      const valueToPerc = this.state.valueToPerc
-      const val = this.getHoverVal(e)
-      this.props.tooltipCallback({
-        hoveredHandleID: id,
-        val: val,
-        percent: valueToPerc.getValue(val),
-      })
+      this.tooltipState.hoveredHandleID = id
+      this.sendTooltip()
+      // const valueToPerc = this.state.valueToPerc
+      // const val = this.getHoverVal(e)
+      // this.props.tooltipCallback({
+      //   hoveredHandleID: id,
+      //   val: val,
+      //   percent: valueToPerc.getValue(val),
+      // })
       //this.setState({ hoveredHandleID: id })
       //this.setHoverState(e)
     }
@@ -532,29 +533,25 @@ class Slider extends PureComponent {
 
   onMouseMoveGadget = (e, id) => {
     if (this.usingTooltip()) {
-      const { valueToPerc, handles } = this.state
-      console.log(`id, handles ${id}    ${JSON.stringify(handles)}`)
+      this.tooltipState.hoveredHandleID = id
+      this.tooltipState.hoverVal = this.getHoverVal(e)
+      this.sendTooltip()
+      // const { valueToPerc, handles } = this.state
+      // console.log(`id, handles ${id}    ${JSON.stringify(handles)}`)
 
-      const val = id ? handles.find(h => h.key == id).val : this.getHoverVal(e)
+      // const val = id ? handles.find(h => h.key == id).val : this.getHoverVal(e)  // todo: what if not found?
 
-      //val = id ? this.handleFromId(handles, id).val : this.getHoverVal(e)   // todo: test in case handlefromid null
-
-      this.props.tooltipCallback({
-        hoveredHandleID: id,
-        val: val,
-        percent: valueToPerc.getValue(val),
-      })
-
-      //this.setHoverState(e)
+      // this.props.tooltipCallback({
+      //   hoveredHandleID: id,
+      //   val: val,
+      //   percent: valueToPerc.getValue(val),
+      // })
     }
   }
 
   onMouseLeaveGadget = () => {
-    if (this.usingTooltip()) {
-      this.props.tooltipCallback(null)
-      // this.setState({ hoveredHandleID: null })
-      // this.setHoverState(null)
-    }
+    this.tooltipState.hoveredHandleID = null
+    this.sendTooltip()
   }
 
   onMouseUp = () => {
@@ -574,49 +571,67 @@ class Slider extends PureComponent {
     onChange(handles.map(d => d.val))
     onSlideEnd(handles.map(d => d.val), { activeHandleID })
 
-    this.setState({ activeHandleID: null })
+    this.activeHandleID = null
+    this.sendTooltip()
+    //this.setState({ activeHandleID: null })
 
-    this.props.tooltipCallback(null) // but what if it's still over stuff? should have recorded that in onmouseentergadget etc.
+    //this.props.tooltipCallback(null) // but what if it's still over stuff? should have recorded that in onmouseentergadget etc.
     isTouch ? this.removeTouchEvents() : this.removeMouseEvents()
   }
 
-  // static tooltipForHandle(mappedHandles, id, grabbed) {
-  //   const handle = mappedHandles.find(h => h.id == id)
-  //   warning(
-  //     handle,
-  //     `matching handle not found for id ${id} in ${JSON.stringify(
-  //       mappedHandles,
-  //     )}`,
-  //   )
+  sendTooltip() {
+    const { tooltipCallback } = this.props
+    const { handles, activeHandleID, valueToPerc } = this.state
+    const { hoverVal, hoveredHandleID } = this.tooltipState
 
-  //   return {
-  //     val: handle.value,
-  //     percent: handle.percent,
-  //     handleId: handle.id,
-  //     grabbed: grabbed,
-  //   }
-  // }
+    if (tooltipCallback) {
+      tooltipCallback(
+        Slider.getTooltipInfo(
+          hoverVal,
+          handles,
+          activeHandleID,
+          hoveredHandleID,
+          valueToPerc,
+        ),
+      )
+    }
+  }
 
-  // // choose tooltip to display based on hover location, active handle, hovered handle.
-  // static getTooltipInfo(
-  //   hoverState,
-  //   mappedHandles,
-  //   activeHandleID,
-  //   hoveredHandleID,
-  //   valueToPerc,
-  // ) {
-  //   if (activeHandleID)
-  //     return Slider.tooltipForHandle(mappedHandles, activeHandleID, true)
-  //   else if (hoveredHandleID)
-  //     return Slider.tooltipForHandle(mappedHandles, hoveredHandleID, false)
-  //   else if (hoverState != null && hoverState.val != null)
-  //     // hovering over rail or track
-  //     return {
-  //       val: hoverState.val,
-  //       percent: valueToPerc.getValue(hoverState.val),
-  //     }
-  //   else return null
-  // }
+  static tooltipForHandle(handles, id, grabbed) {
+    const handle = handles.find(h => h.key == id)
+    warning(
+      handle,
+      `matching handle not found for id ${id} in ${JSON.stringify(handles)}`,
+    )
+
+    return {
+      val: handle.value,
+      percent: handle.percent,
+      handleId: handle.id,
+      grabbed: grabbed,
+    }
+  }
+
+  // choose tooltip to display based on hover location, active handle, hovered handle.
+  static getTooltipInfo(
+    hoverVal,
+    handles,
+    activeHandleID,
+    hoveredHandleID,
+    valueToPerc,
+  ) {
+    if (activeHandleID)
+      return Slider.tooltipForHandle(handles, activeHandleID, true)
+    else if (hoveredHandleID)
+      return Slider.tooltipForHandle(handles, hoveredHandleID, false)
+    else if (hoverVal != null)
+      // hovering over rail or track
+      return {
+        val: hoverVal,
+        percent: valueToPerc.getValue(hoverVal),
+      }
+    else return null
+  }
 
   render() {
     const {
