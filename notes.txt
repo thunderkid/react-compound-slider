@@ -246,3 +246,9 @@ Where `tooltipCallback` is triggered whenever you hover over a rail, drag a hand
 
 I think this could be achieved easily just by passing my `tooltipInfo` back up to the callback instead of down to the `<Tooltip>` and reducing `state` accordingly. In some ways it's a nicer separation of concerns.
 
+
+
+
+double handle flashing caused by reordering of handle id's?
+    This could maybe be done simultaneously with switching of label?
+    or toggle to turn off tooltip while this is happening?

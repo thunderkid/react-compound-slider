@@ -476,56 +476,23 @@ class Slider extends PureComponent {
 
   tooltipState = {}
 
-  // maybe not even bother - there's no rerendering issue now
-  usingTooltip() {
-    return this.props.tooltipCallback != null
-  }
-
   // Corresponds to mouse entering a part of the Rail/Track/Handle "Gadget". Id corresponds to the handla handle.
   onMouseEnterGadget = (e, id) => {
     this.tooltipState.hoveredHandleID = id
     this.tooltipState.hoverVal = this.getHoverVal(e)
     this.sendTooltip()
-    // if (this.usingTooltip()) {
-    //   if (!id) {
-    //     this.tooltipState.hoveredHandleID = null
-    //     this.tooltipState.hoverVal = this.getHoverVal(e)
-    //     this.sendTooltip()
-    //   } else if (!this.activeHandleID /*|| this.activeHandleID == id*/) {
-    //     // ghosting crossover issues
-    //     this.tooltipState.hoveredHandleID = id
-    //     this.tooltipState.hoverVal = this.getHoverVal(e)
-    //     this.sendTooltip()
-    //   }
-    // }
   }
 
   onMouseMoveGadget = (e, id) => {
     this.tooltipState.hoveredHandleID = id
     this.tooltipState.hoverVal = this.getHoverVal(e)
     this.sendTooltip()
-    // if (this.usingTooltip()) {
-    //   if (!id /*|| this.activeHandleID == id*/) {
-    //     console.log('wix move null')
-    //     this.tooltipState.hoveredHandleID = null
-    //     this.tooltipState.hoverVal = this.getHoverVal(e)
-    //     this.sendTooltip()
-    //   } else if (!this.activeHandleID /*|| this.activeHandleID == id*/) {
-    //     this.tooltipState.hoveredHandleID = id
-    //     this.tooltipState.hoverVal = this.getHoverVal(e)
-    //     this.sendTooltip()
-    //   }
-    // }
   }
 
   onMouseLeaveGadget = (e, id) => {
     console.log('wix leave null')
     this.tooltipState.hoveredHandleID = null
     this.tooltipState.hoverVal = null
-    // if (id == this.tooltipState.hoveredHandleID) {
-    //   this.tooltipState.hoveredHandleID = null
-    //   this.tooltipState.hoverVal = null
-    // }
     this.sendTooltip()
   }
 
