@@ -3,6 +3,7 @@
     display: inline-block;
     border-bottom: 1px dotted #fff;
     margin-left: 22px;
+    background: pink;
   }
   
   .tooltip .tooltiptext {
@@ -21,6 +22,17 @@
   }
   
   .tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #fff transparent transparent transparent;
+  }
+  
+  .tooltip::after {
     content: "";
     position: absolute;
     top: 100%;
