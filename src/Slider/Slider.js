@@ -561,6 +561,20 @@ class Slider extends PureComponent {
 
     const handles = freshHandles ? freshHandles : currHandles
 
+    console.log(
+      `jix sending tooltip with ${JSON.stringify(this.tooltipState)}, ${
+        this.activeHandleID
+      }`,
+    )
+    const res = Slider.getTooltipInfo(
+      hoverVal,
+      handles,
+      activeHandleID,
+      hoveredHandleID,
+      valueToPerc,
+    )
+    console.log(`jix result ${JSON.stringify(res)}`)
+
     if (tooltipCallback) {
       tooltipCallback(
         Slider.getTooltipInfo(
