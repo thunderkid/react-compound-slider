@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import { Slider, Rail, Handles, Tracks } from 'react-compound-slider'
 import ValueViewer from 'docs/src/pages/ValueViewer' // for examples only - displays the table above slider
 import { Handle, Track } from './components' // example render components - source below
+import StandardTooltip from '../../../../../src/Slider/Tooltip'
 
 const sliderStyle = {
   position: 'relative',
@@ -54,6 +55,8 @@ class TT2 extends Component {
       <>
         {tti && (
           <div
+            className="tooltip"
+            style={{ position: 'absolute', left: `${percent}` }}
             style={tooltipStyle(tti.percent, tti.hoveredHandleId, tti.grabbed)}
           >
             {tti.val}
@@ -113,7 +116,7 @@ class Example extends Component {
           values={values}
           tooltipCallback={this.tooltipCallback}
         >
-          <TT2 tti={tti} />
+          <StandardTooltip tti={tti} />
           <Rail>
             {({ getRailProps }) => (
               <div style={railStyle} {...getRailProps()} />
