@@ -17,6 +17,7 @@ import {
 } from './utils'
 import LinearScale from './LinearScale'
 import DiscreteScale from './DiscreteScale'
+import { getTooltipInfo } from './Tooltip'
 
 const isBrowser =
   typeof window !== 'undefined' && typeof document !== 'undefined'
@@ -533,7 +534,7 @@ class Slider extends PureComponent {
         this.activeHandleID
       }`,
     )
-    const res = Slider.getTooltipInfo(
+    const res = getTooltipInfo(
       hoverVal,
       handles,
       activeHandleID,
@@ -544,7 +545,7 @@ class Slider extends PureComponent {
 
     if (tooltipCallback) {
       tooltipCallback(
-        Slider.getTooltipInfo(
+        getTooltipInfo(
           hoverVal,
           handles,
           activeHandleID,
@@ -553,48 +554,6 @@ class Slider extends PureComponent {
         ),
       )
     }
-  }
-
-  static tooltipForHandle(handles, valueToPerc, id, grabbed) {
-    const handle = handles.find(h => h.key == id)
-    console.log(`tooltip for handle ${JSON.stringify(handle)}`)
-    warning(
-      handle,
-      `matching handle not found for id ${id} in ${JSON.stringify(handles)}`,
-    )
-
-    return {
-      val: handle.val,
-      percent: valueToPerc.getValue(handle.val),
-      handleId: id,
-      grabbed: grabbed,
-    }
-  }
-
-  // choose tooltip to display based on hover location, active handle, hovered handle.
-  static getTooltipInfo(
-    hoverVal,
-    handles,
-    activeHandleID,
-    hoveredHandleID,
-    valueToPerc,
-  ) {
-    if (activeHandleID)
-      return Slider.tooltipForHandle(handles, valueToPerc, activeHandleID, true)
-    else if (hoveredHandleID)
-      return Slider.tooltipForHandle(
-        handles,
-        valueToPerc,
-        hoveredHandleID,
-        false,
-      )
-    else if (hoverVal != null)
-      // hovering over rail or track
-      return {
-        val: hoverVal,
-        percent: valueToPerc.getValue(hoverVal),
-      }
-    else return null
   }
 
   render() {
