@@ -18,7 +18,7 @@ class Rail extends Component {
       onTouchStart: callAll(props.onTouchStart, emitTouch),
       onMouseEnter: e => emitMouseEnter(e, null),
       onMouseMove: e => emitMouseMove(e, null),
-      onMouseLeave: e => emitMouseLeave(),
+      onMouseLeave: e => emitMouseLeave(e, null),
     }
   }
 

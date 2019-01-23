@@ -296,6 +296,12 @@ class Slider extends PureComponent {
     onSlideStart(handles.map(d => d.val), { activeHandleID: handle.key })
     isTouch ? this.addTouchEvents() : this.addMouseEvents()
     this.activeHandleID = handle.key
+    this.tooltipState.hoveredHandleID = handle.key
+    console.log(
+      `wix slidestart set tooltip ${JSON.stringify(this.tooltipState)}`,
+    )
+
+    //this.tooltipState.hoveredHandleID = handle.key   // subordinate for now, but will transition to hover immediately on release
   }
 
   handleRailAndTrackClicks(e, isTouch) {
@@ -494,6 +500,7 @@ class Slider extends PureComponent {
   onMouseMoveGadget = (e, id) => {
     if (this.usingTooltip()) {
       if (!id /*|| this.activeHandleID == id*/) {
+        console.log('wix move null')
         this.tooltipState.hoveredHandleID = null
         this.tooltipState.hoverVal = this.getHoverVal(e)
         this.sendTooltip()
@@ -505,9 +512,12 @@ class Slider extends PureComponent {
     }
   }
 
-  onMouseLeaveGadget = () => {
-    this.tooltipState.hoveredHandleID = null
-    this.tooltipState.hoverVal = null
+  onMouseLeaveGadget = (e, id) => {
+    console.log('wix leave null')
+    if (id == this.tooltipState.hoveredHandleID) {
+      this.tooltipState.hoveredHandleID = null
+      this.tooltipState.hoverVal = null
+    }
     this.sendTooltip()
   }
 
@@ -529,6 +539,7 @@ class Slider extends PureComponent {
     onSlideEnd(handles.map(d => d.val), { activeHandleID })
 
     this.activeHandleID = null
+    console.log(`wix sending tooltip with ${JSON.stringify(this.tooltipState)}`)
     this.sendTooltip()
 
     isTouch ? this.removeTouchEvents() : this.removeMouseEvents()
