@@ -17,7 +17,7 @@ import {
 } from './utils'
 import LinearScale from './LinearScale'
 import DiscreteScale from './DiscreteScale'
-import { getTooltipInfo } from './Tooltip'
+import { getTooltipInfo } from '../Tooltip'
 
 const isBrowser =
   typeof window !== 'undefined' && typeof document !== 'undefined'

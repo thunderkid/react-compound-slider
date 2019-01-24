@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { Slider, Rail, Handles, Tracks } from 'react-compound-slider'
 import ValueViewer from 'docs/src/pages/ValueViewer' // for examples only - displays the table above slider
 import { Handle, Track } from './components' // example render components - source below
-import StandardTooltip from '../../../../../src/Slider/Tooltip'
+import { Tooltip } from './components'
 
 const sliderStyle = {
   position: 'relative',
@@ -72,7 +72,7 @@ class Example extends Component {
           values={values}
           tooltipCallback={this.tooltipCallback}
         >
-          <StandardTooltip render={val => `val be ${val}`} tti={tti} />
+          <Tooltip render={val => `val be ${val}`} tti={tti} />
           <Rail>
             {({ getRailProps }) => (
               <div style={railStyle} {...getRailProps()} />

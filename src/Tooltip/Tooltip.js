@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import warning from 'warning'
 
-class StandardTooltip extends Component {
+class Tooltip extends Component {
   render() {
     const { tti, render } = this.props
     //console.log(`tti got ${JSON.stringify(tti)}`)
@@ -61,6 +61,4 @@ export function getTooltipInfo(
   else return null
 }
 
-export default StandardTooltip
-
-//              style={tooltipStyle(tti.percent, tti.hoveredHandleId, tti.grabbed)}
+export default Tooltip
