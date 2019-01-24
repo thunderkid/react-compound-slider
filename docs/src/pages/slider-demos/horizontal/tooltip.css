@@ -8,18 +8,31 @@
   padding: 5px;
   background: black;
   background-color: 'rgb(10, 10, 10)';
-  border: 12px sold white;
+  border: 1px solid white;
   user-select: none;
   white-space: pre;
 }
 
-.tooltip2::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: black transparent transparent transparent;
-} 
+.tooltip2:after, .tooltip2:before {
+	top: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: "";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.tooltip2:after {
+	border-color: rgba(0, 0, 0, 0);
+	border-top-color: #000000;
+	border-width: 5px;
+	margin-left: -5px;
+}
+.tooltip2:before {
+	border-color: rgba(255, 255, 255, 0);
+	border-top-color: #ffffff;
+	border-width: 7px;
+	margin-left: -7px;
+}
