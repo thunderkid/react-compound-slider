@@ -4,7 +4,7 @@ import warning from 'warning'
 class StandardTooltip extends Component {
   render() {
     const { tti, render } = this.props
-    console.log(`tti got ${JSON.stringify(tti)}`)
+    //console.log(`tti got ${JSON.stringify(tti)}`)
     return (
       <>
         {tti && (
