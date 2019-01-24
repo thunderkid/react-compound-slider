@@ -103,6 +103,8 @@ const types = [
   ['src/Tracks/Tracks.d.ts', 'Tracks/Tracks.d.ts'],
   ['src/Ticks/index.d.ts', 'Ticks/index.d.ts'],
   ['src/Ticks/Ticks.d.ts', 'Ticks/Ticks.d.ts'],
+  ['src/Tooltip/index.d.ts', 'Tooltip/index.d.ts'],
+  ['src/Tooltip/Tooltip.d.ts', 'Tooltip/Tooltip.d.ts'],
 ]
 
 Promise.all(files.map(file => copyFile(file)))

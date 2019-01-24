@@ -21,43 +21,8 @@ const railStyle = {
   backgroundColor: 'rgb(155,155,155)',
 }
 
-const tooltipStyle = percent => {
-  return {
-    top: `${percent}%`,
-    position: 'absolute',
-    zIndex: 3,
-    //right: 0,    // stick it on left of slider.
-    left: 0,
-    marginLeft: '45px',
-    width: 'auto',
-    transform: 'translateY(-50%)',
-    padding: '5px',
-    height: 'auto',
-    backgroundColor: 'rgb(10, 10, 10)',
-    border: '1px solid white',
-  }
-}
-
 const domain = [100, 300]
 const defaultValues = [250, 200, 150, 100]
-
-class TT2 extends Component {
-  render() {
-    const tti = this.props.tti
-    console.log(`tti got ${JSON.stringify(tti)}`)
-    return (
-      <>
-        {tti && (
-          <div
-            style={tooltipStyle(tti.percent, tti.hoveredHandleId, tti.grabbed)}
-          >
-            {tti.val}
-          </div>
-        )}
-      </>
-    )
-  }
-}
 
 class Example extends Component {
   state = {
@@ -71,11 +36,6 @@ class Example extends Component {
 
   onChange = values => {
     this.setState({ values })
-  }
-
-  tooltipCallback = tti => {
-    console.log(`tooltip ${JSON.stringify(tti)}`)
-    this.setState({ tti: tti })
   }
 
   render() {
@@ -96,9 +56,7 @@ class Example extends Component {
           onUpdate={this.onUpdate}
           onChange={this.onChange}
           values={values}
-          tooltipCallback={this.tooltipCallback}
         >
-          <TT2 tti={tti} />
           <Rail>
             {({ getRailProps }) => (
               <div style={railStyle} {...getRailProps()} />

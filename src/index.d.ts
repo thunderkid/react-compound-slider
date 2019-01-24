@@ -11,3 +11,4 @@ export { default as Ticks, TicksObject } from './Ticks';
 export { default as Slider } from './Slider';
 export { default as Rail, GetRailProps } from './Rail';
 export { default as Handles, HandlesObject, GetHandleProps } from './Handles';
+export { default as Tooltip } from './Tooltip';
