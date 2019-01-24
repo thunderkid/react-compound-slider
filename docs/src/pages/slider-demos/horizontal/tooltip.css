@@ -43,3 +43,26 @@
     border-color: #fff transparent transparent transparent;
   }
   
+.tooltip2 {
+  position: absolute;
+  z-index: 3;
+  width: auto;
+  height: auto;
+  transform: translateX(-50%);
+  margin-top: -45px;
+  padding: 5px;
+  background-color: 'rgb(10, 10, 10)';
+  border: 1px sold black;
+  user-select: none;
+}
+
+.tooltip2::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #fff transparent transparent transparent;
+}
