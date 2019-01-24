@@ -3,7 +3,7 @@ import warning from 'warning'
 
 class StandardTooltip extends Component {
   render() {
-    const { tti, rend } = this.props
+    const { tti, render } = this.props
     console.log(`tti got ${JSON.stringify(tti)}`)
     return (
       <>
@@ -12,7 +12,7 @@ class StandardTooltip extends Component {
             className="tooltip"
             style={{ position: 'absolute', left: `${tti.percent}%` }}
           >
-            not yet
+            {render(tti.val)}
           </div>
         )}
       </>
