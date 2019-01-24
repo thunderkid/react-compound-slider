@@ -9,7 +9,11 @@ class StandardTooltip extends Component {
       <>
         {tti && (
           <div
-            className="tooltip2"
+            className={
+              'tooltip2' +
+              (tti.handleId ? ' handle' : '') +
+              (tti.grabbed ? ' grabbed' : '')
+            }
             style={{ position: 'absolute', left: `${tti.percent}%` }}
           >
             {render(tti.val)}

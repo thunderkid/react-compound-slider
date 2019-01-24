@@ -36,3 +36,16 @@
 	border-width: 7px;
 	margin-left: -7px;
 }
+
+
+.tooltip2.handle {
+	background: darkgray;
+}
+
+.tooltip2.grabbed {
+	background: lightgray;
+}
+
+.tooltip2.handle.grabbed {
+	background: darkblue;
+}
